@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import App from '../experiments/VoxelIsh'
+---
+
+<BaseLayout
+  ignoreTheme
+  class="light"
+  title="Voxel-ish"
+  description="Collidable 3D voxels generated from images"
+>
+  <main class="w-full h-screen bg-white">
+    <App client:load transition:persist />
+  </main>
+</BaseLayout>

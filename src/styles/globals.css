@@ -1,0 +1,14 @@
+a,
+label[for] {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--gray8);
+  transition: all 0.25s;
+}
+
+a:hover,
+label[for]:hover {
+  text-decoration-color: var(--gray12);
+}

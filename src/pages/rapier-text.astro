@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import App from '../experiments/RapierText'
+---
+
+<BaseLayout
+  ignoreTheme
+  class="light"
+  title="Rapier Text"
+  description="Collidable metallic 3D text blocks"
+>
+  <main class="w-full h-screen">
+    <App client:load transition:persist />
+  </main>
+
+  <!-- Here because @react-three/drei's Html doesn't work with Orthographic camera. -->
+  <div class="absolute left-0 bottom-0 font-mono m-10">
+    <div class="w-xl text-lg flex flex-col items-start select-none">
+      <h1 class="text-4xl font-bold">Rapier-Text</h1>
+      <p class="mt-1 text-gray-11">Noto Serif Thai on Text3D. Drag around.</p>
+    </div>
+  </div>
+</BaseLayout>
