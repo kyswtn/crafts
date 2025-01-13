@@ -114,7 +114,7 @@ function HtmlPageContent() {
         }}
       />
 
-      <div className="p-5 sm:p-10 w-full h-[100svh] text-lg flex flex-col items-start justify-between select-none">
+      <div className="p-5 sm:p-10 w-full h-svh text-lg flex flex-col items-start justify-between select-none">
         <div className="w-full">
           <h1 className="text-4xl font-bold">VOXEL-ISH</h1>
           <p className="mt-1 text-gray-11">

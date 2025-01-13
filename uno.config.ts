@@ -19,6 +19,9 @@ export default defineConfig({
     letterSpacing: {
       serif: '-0.018em',
     },
+    height: {
+      svh: '100svh',
+    },
   },
   shortcuts: {
     'font-serif': 'font-serif tracking-serif',
