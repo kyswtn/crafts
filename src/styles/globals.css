@@ -12,3 +12,7 @@ a:hover,
 label[for]:hover {
   text-decoration-color: var(--gray12);
 }
+
+ol {
+  list-style-type: decimal;
+}

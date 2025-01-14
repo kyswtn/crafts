@@ -1,12 +1,12 @@
 import {Center, OrbitControls, Text3D, useTexture} from '@react-three/drei'
-import {Canvas, useThree} from '@react-three/fiber'
+import {Canvas} from '@react-three/fiber'
 import {Physics} from '@react-three/rapier'
 import {Suspense, useRef} from 'react'
 import * as THREE from 'three'
 import type {OrbitControls as THREEOrbitControls} from 'three-stdlib'
+import CanvasBoundOrthographicCamera from '../components/CanvasBoundOrthographicCamera'
 import DraggableRigidBody from '../components/DraggableRigidBody'
 import {sawatdee} from '../lib/thai'
-import CanvasBoundOrthographicCamera from '../components/CanvasBoundOrthographicCamera'
 
 const objectSize = 6
 const padding = -1.5
@@ -42,12 +42,12 @@ function TextBlocks({texts}: TextBlocksProps) {
   const moveback = ((objectSize + padding) * (texts.length - 1)) / 2
   const sizeStep = objectSize + padding
   const texture = useTexture('/textures/shiny.jpeg')
-  const {viewport} = useThree()
 
   return (
     <group>
       {texts.map((char, index) => (
         <DraggableRigidBody
+          // biome-ignore lint/suspicious/noArrayIndexKey: It's okay.
           key={index}
           position={[index * sizeStep - moveback, (index % 2 === 0 ? objectSize / 1.5 : 0) - 1, 0]}
           rotation={new THREE.Euler(0, -0.5, 0.5)}

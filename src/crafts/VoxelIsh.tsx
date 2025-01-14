@@ -1,14 +1,14 @@
-import {Suspense, useEffect, useRef, type RefObject} from 'react'
-import {Canvas} from '@react-three/fiber'
 import {Html, OrbitControls} from '@react-three/drei'
+import {Canvas} from '@react-three/fiber'
 import {Physics} from '@react-three/rapier'
-import {useFileDragAndDrop} from '../lib/useFileDragAndDrop'
+import {type RefObject, Suspense, useEffect, useRef} from 'react'
 import type {OrbitControls as THREEOrbitControls} from 'three-stdlib'
 import {create} from 'zustand'
-import {fetchBlobAndCache} from '../lib/fetchBlobAndCache'
-import {getImageDataFromFile} from '../lib/getImageDataFromFile'
 import VoxelImage from '../components/VoxelImage'
 import {ellipse} from '../lib/ellipse'
+import {fetchBlobAndCache} from '../lib/fetchBlobAndCache'
+import {getImageDataFromFile} from '../lib/getImageDataFromFile'
+import {useFileDragAndDrop} from '../lib/useFileDragAndDrop'
 
 const examples = [
   '/logos/chrome.png',

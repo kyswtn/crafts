@@ -50,7 +50,7 @@ export default async function OG() {
             fontSize: '84px',
           }}
         >
-          Experiments
+          Crafts
         </div>
         <div
           style={{

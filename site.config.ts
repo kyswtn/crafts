@@ -1,5 +1,5 @@
 export default {
-  site: 'https://r3fx.vercel.app',
-  title: 'React Three Fiber Experiments',
-  description: 'Fun React Three Fiber Experiments',
+  site: 'https://crafts-by-kyswtn.vercel.app',
+  title: 'Crafts by Kyaw',
+  description: 'Mostly remakes of things I find fun to make',
 }
