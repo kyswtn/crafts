@@ -44,6 +44,7 @@ export default defineConfig({
         'yellow',
         //  info
         'blue',
+        'iris',
       ],
     }),
   ],

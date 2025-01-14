@@ -1,0 +1,269 @@
+---
+import crypto from 'node:crypto'
+import {parseHTML} from 'linkedom'
+
+const offsetPaths = {
+  'bottom-left': {
+    path: 'M1 80.5C74.5 104.833 232.8 123 278 0.5',
+    width: 277,
+    height: 98,
+    cursorTranslate: [-100, 50],
+    anchor: 'top left',
+  },
+  'bottom-right': {
+    path: 'M212 84.5C88.5 122.5 17.5 64.5 0.5 0.5',
+    width: 122.5,
+    height: 96,
+    cursorTranslate: [100, 25],
+    anchor: 'top right',
+  },
+}
+
+const defaultSlotHtml = Astro.slots.has('default') ? await Astro.slots.render('default') : ''
+const {document} = parseHTML(defaultSlotHtml)
+const children = [...document.children]
+
+const getDirection = (child: (typeof children)[number]) => {
+  const dataDirectionAttribute = child.getAttribute('data-direction')
+  return dataDirectionAttribute !== null && dataDirectionAttribute in offsetPaths
+    ? (dataDirectionAttribute as keyof typeof offsetPaths)
+    : null
+}
+
+export type Props = {class?: string}
+const {class: className} = Astro.props
+---
+
+<div class:list={['cursorblocks', className]}>
+  {
+    children.map((child) => {
+      const direction = getDirection(child)
+      if (!direction) return child
+
+      const uuid = crypto.randomUUID()
+      const {path: svgPath, width, cursorTranslate, anchor} = offsetPaths[direction]
+
+      const isLeft = direction.includes('left')
+      const transform = `translate(${isLeft ? `${-width}px` : '100%'}, 0)`
+
+      // These are all the props child elements can accept.
+      const cursorName = child.getAttribute('data-cursor-name') ?? undefined
+      const cursorColor = child.getAttribute('data-cursor-color') ?? undefined
+      const cursorTextColor = child.getAttribute('data-cursor-text') ?? undefined
+
+      return (
+        <div class="with-svg-path">
+          <svg class="offset-path-svg" style={`transform: ${transform}`}>
+            <path id={uuid} d={svgPath} fill="none" />
+          </svg>
+
+          <div
+            class="with-cursor"
+            style={`offset-anchor: ${anchor}; offset-path: url(#${uuid}); transform: ${transform}`}
+          >
+            <div class="item">
+              <Fragment set:html={child.outerHTML} />
+            </div>
+
+            <div class="highlight" />
+
+            <div
+              class="cursor"
+              style={`--translateX: ${cursorTranslate[0]}px; --translateY: ${cursorTranslate[1]}px`}
+            >
+              <svg viewBox="0 0 25 25">
+                <path
+                  fill={cursorColor}
+                  d="m1.198 3.496 4.518 18.715c.41 1.697 2.697 1.993 3.524.456l4.177-7.756 8.33-2.975c1.655-.591 1.692-2.92.055-3.563L3.743 1.28C2.31.716.837 1.999 1.198 3.496Z"
+                />
+                <path
+                  fill="#fff"
+                  fill-rule="evenodd"
+                  d="M.088 3.764C-.49 1.369 1.868-.684 4.161.216l18.058 7.095c2.619 1.028 2.56 4.754-.089 5.7l-7.916 2.828-3.969 7.369c-1.324 2.46-4.984 1.986-5.64-.729L.089 3.764Zm3.238-1.423a.761.761 0 0 0-1.018.887l4.517 18.715c.164.68 1.08.797 1.41.183l4.177-7.756c.133-.249.355-.44.62-.534l8.33-2.975c.663-.237.677-1.168.023-1.425L3.326 2.34Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              {cursorName && (
+                <div
+                  class="nametag"
+                  style={`background: ${cursorColor}; color: ${cursorTextColor}`}
+                >
+                  {cursorName}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )
+    })
+  }
+</div>
+
+<style scoped>
+  .cursorblocks {
+    position: relative;
+  }
+
+  .cursorblocks.no-animation * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .cursorblocks.show-curves svg.offset-path-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .cursorblocks.show-curves svg.offset-path-svg path {
+    /* SAFETY: Adjust it to your own value, this depends on my website. */
+    stroke: var(--red9);
+  }
+
+  .with-svg-path {
+    position: relative;
+  }
+
+  .offset-path-svg {
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .with-cursor {
+    --cursor-index: 0;
+    --cursor-multiplier: 500ms;
+    --cursor-delay: calc(var(--cursor-index) * var(--cursor-multiplier));
+
+    position: relative;
+    offset-rotate: 0deg;
+    offset-distance: 100%;
+
+    animation:
+      500ms ease var(--cursor-delay) both fade-in,
+      1s ease calc(250ms + var(--cursor-delay)) both cursor-in;
+  }
+
+  .highlight {
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    /* SAFETY: Adjust it to your own value, this depends on my website. */
+    border: 2px solid var(--blue6);
+    animation:
+      500ms ease calc(500ms + var(--cursor-delay)) both fade-in,
+      500ms ease calc(2s + var(--cursor-delay)) both fade-out;
+  }
+
+  .highlight::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    /* SAFETY: Adjust it to your own value, this depends on my website. */
+    background-color: var(--blue6);
+    opacity: 50%;
+  }
+
+  .cursor {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    animation: 1s ease calc(1.5s + var(--cursor-delay)) both cursor-out;
+  }
+
+  .cursor svg {
+    width: 1.5rem;
+  }
+
+  .cursor .nametag {
+    max-width: fit-content;
+    line-height: 1;
+    padding: 0.125rem 0.5rem;
+    margin: 1rem 0 0 1rem;
+    border-radius: 0.5rem;
+    font-size: 17px !important;
+    /* SAFETY: Adjust it to your own value, this depends on my website. */
+    @apply font-mono;
+  }
+
+  .with-cursor .item {
+    opacity: 0;
+    animation: 1s ease calc(1.5s + var(--cursor-delay)) both fade-in;
+  }
+
+  .with-svg-path:nth-child(1) .with-cursor {
+    --cursor-index: 1;
+    z-index: 9;
+  }
+
+  .with-svg-path:nth-child(2) .with-cursor {
+    --cursor-index: 2;
+    z-index: 8;
+  }
+
+  .with-svg-path:nth-child(3) .with-cursor {
+    --cursor-index: 3;
+    z-index: 7;
+  }
+
+  .with-svg-path:nth-child(4) .with-cursor {
+    --cursor-index: 4;
+    z-index: 6;
+  }
+
+  .with-svg-path:nth-child(5) .with-cursor {
+    --cursor-index: 5;
+    z-index: 5;
+  }
+
+  @keyframes cursor-in {
+    0% {
+      offset-distance: 25%;
+    }
+
+    100% {
+      offset-distance: 100%;
+    }
+  }
+
+  @keyframes cursor-out {
+    0% {
+      transform: translate(0, 0);
+      filter: blur(0);
+      opacity: 1;
+    }
+
+    100% {
+      transform: translate(var(--translateX), var(--translateY));
+      filter: blur(10px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-out {
+    0% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+</style>
