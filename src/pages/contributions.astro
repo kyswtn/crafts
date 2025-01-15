@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import App from '../crafts/Contributions'
+import SearchParam from '../components/SearchParam'
+---
+
+<BaseLayout
+  ignoreTheme
+  class="light"
+  title="Contributions"
+  description="Visual GitHub contributions with blocks"
+>
+  <main class="w-full h-svh bg-white">
+    <App client:load client:only />
+  </main>
+
+  <div class="absolute left-0 top-0 font-mono right-0 text-gray-12 w-fit">
+    <div
+      class="max-w-full w-content pl-5 sm:pl-10 pt-5 sm:pt-10 text-lg flex flex-col items-start select-none"
+    >
+      <h1 class="text-4xl font-bold">Contributions</h1>
+      <p class="mt-1 text-gray-11">
+        Github contributions by <u class="underline-dashed decoration-offset-6"
+          >@<SearchParam name="by" client:only /></u
+        >.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

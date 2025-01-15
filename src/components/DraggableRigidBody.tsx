@@ -21,9 +21,19 @@ type DraggableRigidBodyProps = {
   children: React.ReactNode
 } & Partial<RigidBodyProps>
 
+/**
+ * This is the simplest form of a draggable rigid body. As simple as this is to implement, it has
+ * a few problems.
+ *
+ * 1. More than one body can be dragged overlapped since each component controls it's active state.
+ * 2. Using a lot of these will lead to performance issues due to `userAfterPhysicsStep` usage, having
+ *    multiple drag event handlers and not instancing meshes.
+ *
+ * Since the children mesh is cloned and not used as it-is, trying to manipulate the mesh's
+ * properties after initial render won't work.
+ */
 export default function DraggableRigidBody(props: DraggableRigidBodyProps) {
   const {dragPlaneNormal = zAxisNormal, children, ...rigidBodyProps} = props
-
   const {size, raycaster, camera} = useThree()
   const activeDrag = useRef(false)
   const dragHandleRef = useRef<THREE.Group>(null!)

@@ -96,8 +96,8 @@ function HtmlPageContent() {
   const {file, example: exampleIndex, loadFromFile, loadFromNextExample} = useStore()
 
   useEffect(() => {
-    loadFromNextExample()
-  }, [loadFromNextExample])
+    if (!file && exampleIndex === undefined) loadFromNextExample()
+  }, [file, exampleIndex, loadFromNextExample])
 
   return (
     <Html fullscreen className="font-mono">

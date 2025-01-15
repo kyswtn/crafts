@@ -4,15 +4,16 @@ import App from '../crafts/CursorBlocks.astro'
 ---
 
 <BaseLayout title="Cursor Blocks" description="Next.js Conf 2024 Cursor Animation">
-  <main class="w-full h-screen bg-gray-1 grid place-items-center">
+  <main class="w-full h-svh bg-gray-1 grid place-items-center -mt-20 sm:mt-0">
     <App />
 
-    <div class="absolute left-0 bottom-0 font-mono right-0 text-gray-12 w-full">
-      <div class="max-w-full ml-10 mb-10 text-lg flex flex-col items-start select-none">
+    <div class="absolute left-0 bottom-0 font-mono right-0 text-gray-12">
+      <div
+        class="w-fit max-w-full px-5 sm:px-10 pb-5 sm:pb-10 text-lg flex flex-col items-start select-none"
+      >
         <h1 class="text-4xl font-bold">Cursor Blocks</h1>
-        <p class="mt-1 text-gray-11">
-          Figma logo animated using <a href="https://nextjs.org/conf">Next.js Conf 2024</a>
-          cursor animations.
+        <p class="mt-1 text-gray-11 hyphens-auto">
+          Figma logo animated using <a href="https://nextjs.org/conf">Next.js Confg 2024</a> cursor animation.
         </p>
       </div>
     </div>

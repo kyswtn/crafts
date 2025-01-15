@@ -5,9 +5,12 @@ import {OrthographicCamera} from '@react-three/drei'
 export type Props = {
   zoom: number
   position: Vector3
+  frustumCulled?: boolean
 }
 
 export default function CanvasBoundOrthographicCamera(props: Props) {
+  const {zoom = 75, position = [0, 0, 0], frustumCulled = false} = props
+
   const {viewport} = useThree()
   const cameraArgs = useMemo<OrthographicCameraProps['args']>(() => {
     const frustumSize = 1
@@ -17,12 +20,18 @@ export default function CanvasBoundOrthographicCamera(props: Props) {
       (frustumSize * aspectRatio) / 2,
       frustumSize / 2,
       frustumSize / -2,
-      0.01,
+      0.001,
       1000,
     ]
-  }, [viewport.width, viewport.height])
+  }, [viewport])
 
   return (
-    <OrthographicCamera makeDefault args={cameraArgs} position={props.position} zoom={props.zoom} />
+    <OrthographicCamera
+      makeDefault
+      args={cameraArgs}
+      zoom={zoom}
+      position={position}
+      frustumCulled={frustumCulled}
+    />
   )
 }
